@@ -4,7 +4,7 @@
 
 
 <h1>Project list</h1>
-<table>
+<table class="table table-striped">
     <thead>
         <tr>
             <th>ID</th>
@@ -26,15 +26,15 @@
             <td>{{$project->objectives ?? 'N/A'}}</td>
             <td>{{$project->slug}}</td>
             <td>
-                <a href="{{route('admin.projects.edit', $project)}}"><i class="fa-solid fa-pencil"></i></a>
-                <a href="{{route('admin.projects.show', $project)}}"><i class="fa-solid fa-eye"></i></a>
-                <i class="fa-solid fa-trash" data-bs-toggle="modal" data-bs-target="#{{$project->id}}"></i>
+                <a href="{{route('admin.projects.edit', $project)}}"><i class="fa-solid fa-pencil text-success"></i></a>
+                <a href="{{route('admin.projects.show', $project)}}"><i class="fa-solid fa-eye text-primary"></i></a>
+                <i class="fa-solid fa-trash text-danger" data-bs-toggle="modal" data-bs-target="#{{$project->id}}"></i>
                 <!-- Modal -->
                 <div class="modal fade" id="{{$project->id}}" tabindex="-1" aria-labelledby="DeleteModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="DeleteModalLabel">Modal title</h1>
+                                <h1 class="modal-title fs-5" id="DeleteModalLabel">Delete element</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
@@ -60,3 +60,16 @@
         @endforelse
     </tbody>
     @endsection
+
+    <style type="text/css">
+
+
+    i:hover {
+
+        opacity: 0.7;
+        cursor: pointer;
+
+
+    }
+        
+    </style>

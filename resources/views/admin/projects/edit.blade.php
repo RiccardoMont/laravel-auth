@@ -20,7 +20,7 @@
     </div>
     <div class="campo">
         <label for="objectives">Objectives</label>
-        <textarea type="text" name="languages_and_frameworks" id="languages_and_frameworks" rows="6" cols="100">{{$project->objectives}}</textarea>
+        <textarea type="text" name="objectives" id="objectives" rows="6" cols="100">{{$project->objectives}}</textarea>
     </div>
     <div class="update-comic">
         <button class="btn btn-primary" type="submit">Update</button>

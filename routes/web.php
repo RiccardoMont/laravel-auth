@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\admin\DashboardController;
-use App\Http\Controllers\admin\ProjectController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ProjectController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,8 +21,8 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth', 'verified'])
-->prefix('admin')
 ->name('admin.')
+->prefix('admin')
 ->group(function () {
 
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');

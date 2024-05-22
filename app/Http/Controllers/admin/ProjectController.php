@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\admin;
+namespace App\Http\Controllers\Admin;
 
 use App\Models\Project;
 use App\Http\Requests\StoreProjectRequest;
@@ -26,7 +26,7 @@ class ProjectController extends Controller
     public function create()
     {
 
-        return view('admins.projects.create');
+        return view('admin.projects.create');
     }
 
     /**
@@ -77,18 +77,19 @@ class ProjectController extends Controller
     {
         
         $project->update($request->all());
-        return to_route('projects.show', $project);
+
+        return to_route('admin.projects.show', $project)->with('message', 'Post updated successfully');
 
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified resource from storage. 
      */
     public function destroy(Project $project)
     {
-
+        //dd($project);
         $project->delete();
-        return to_route('projects.index', $project);
+        return to_route('admin.projects.index', $project)->with('message', 'Post deleted successfully');
 
     }
 }

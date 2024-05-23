@@ -20,6 +20,7 @@ class ProjectSeeder extends Seeder
 
             $project = new Project();
             $project->title = $faker->words(4, true);
+            $project->cover_image = $faker->imageUrl(600, 400, 'Projects', true, $project->title, true, 'jpg');
             $project->languages_and_frameworks = $faker->words(5, true);
             $project->slug = Str::of($project->title)->slug('-');
             $project->save();

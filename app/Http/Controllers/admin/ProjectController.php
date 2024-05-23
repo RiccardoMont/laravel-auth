@@ -6,6 +6,8 @@ use App\Models\Project;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProjectController extends Controller
 {
@@ -15,7 +17,7 @@ class ProjectController extends Controller
     public function index()
     {
 
-        $projects = Project::all();
+        $projects = Project::orderByDesc('id')->get();
 
         return view('admin.projects.index', compact('projects'));
     }
@@ -35,18 +37,26 @@ class ProjectController extends Controller
     public function store(StoreProjectRequest $request)
     {
         
-        $val_data = $request->validate([
+        /*$val_data = $request->validate([
             'title' => 'required|max:100',
             'languages_and_frameworks' => 'required|max:100',
             'slug' => 'required',
-        ]);
+        ]);*/
 
+        $val_data = $request->validated();
+        
+        $val_data['slug'] = Str::slug($request->title, '-');
+
+        $image_path = Storage::put('uploads', $request->cover_image);
+        
+        $val_data['cover_image'] = $image_path;
+        
         $project = new Project();
 
         $project->fill($val_data);
         $project->save();
 
-        return to_route('projects.index');
+        return to_route('admin.projects.index');
 
     }
 

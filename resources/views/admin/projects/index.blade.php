@@ -3,7 +3,7 @@
 @section('content')
 
 
-<h1>Project list</h1>
+<h1 class="my-4">Project list</h1>
 <table class="table table-striped">
     <thead>
         <tr>
@@ -20,7 +20,13 @@
         @forelse ($projects as $project)
         <tr>
             <td>{{$project->id}}</td>
-            <td>{{$project->cover_image ?? 'N/A'}}</td>
+            <td>
+                @if (Str::startsWith($project->cover_image, 'https://'))
+                <img width="100px" src="{{$project->cover_image}}" alt="">
+                @else
+                <img width="100px" src="{{asset('storage/' . $project->cover_image)}}" alt="">
+                @endif
+            </td>
             <td>{{$project->title}}</td>
             <td>{{$project->languages_and_frameworks}}</td>
             <td>{{$project->objectives ?? 'N/A'}}</td>
@@ -62,14 +68,11 @@
     @endsection
 
     <style type="text/css">
+        i:hover {
+
+            opacity: 0.7;
+            cursor: pointer;
 
 
-    i:hover {
-
-        opacity: 0.7;
-        cursor: pointer;
-
-
-    }
-        
+        }
     </style>

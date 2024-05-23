@@ -22,6 +22,7 @@
 
 
 <body>
+    @include('partials.admin.header')
     <div class="container">
         <div class="row">
             @yield('content')

@@ -10,7 +10,11 @@
         <span class="fst-italic fw-bold">{{$project->slug}}</span>
     </div>
     <div class="d-flex justify-content-between">
-        <img class="rounded" src="{{$project->cover_image ?? 'https://picsum.photos/500/350'}}" alt="">
+        @if (Str::startsWith($project->cover_image, 'https://'))
+        <img loading="lazy" class="rounded" width="100%" src="{{$project->cover_image}}" alt="">
+        @else
+        <img loading="lazy" class="rounded" width="50%" src="{{asset('storage/' . $project->cover_image)}}" alt="">
+        @endif
         <div class="col-6 position-relative">
             <p class="text-break"><strong>Objectives:</strong> {{$project->objectives ?? 'N/A'}}</p>
             <span><strong>Languages and framework:</strong> {{$project->languages_and_frameworks}}</span>

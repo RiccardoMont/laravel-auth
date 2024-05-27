@@ -12,9 +12,13 @@
         <label for="title" class="form-label fs-5 fw-bold">Titolo</label>
         <input type="text" class="form-control border-3 border-dark-subtle" name="title" id="title" value="{{$project->title}}">
     </div>
-    <div class="d-flex gap-4">
-        <img width="100px" src="{{asset('storage/' . $project->cover_image)}}" alt="">
-        <div class="mb-3">
+    <div class="d-flex gap-4 align-items-end">
+        @if (Str::startsWith($project->cover_image, 'https://'))
+        <img loading="lazy" class="rounded" width="50%" src="{{$project->cover_image}}" alt="">
+        @else
+        <img loading="lazy" class="rounded" width="20%" src="{{asset('storage/' . $project->cover_image)}}" alt="">
+        @endif
+        <div>
             <label for="cover_image" class="form-label fs-5 fw-bold">Cover Image</label>
             <input type="file" class="form-control border-3 border-dark-subtle" name="cover_image" id="cover_image">
         </div>

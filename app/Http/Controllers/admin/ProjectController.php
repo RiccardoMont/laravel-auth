@@ -36,28 +36,24 @@ class ProjectController extends Controller
      */
     public function store(StoreProjectRequest $request)
     {
-        
-        /*$val_data = $request->validate([
-            'title' => 'required|max:100',
-            'languages_and_frameworks' => 'required|max:100',
-            'slug' => 'required',
-        ]);*/
 
-        $val_data = $request->validated();
-        
-        $val_data['slug'] = Str::slug($request->title, '-');
+        $validated = $request->validated();
 
-        $image_path = Storage::put('uploads', $request->cover_image);
-        
-        $val_data['cover_image'] = $image_path;
-        
+        $validated['slug'] = Str::slug($request->title, '-');
+
+        if ($request->has('cover_image')) {
+
+            $image_path = Storage::put('uploads', $request->cover_image);
+
+            $validated['cover_image'] = $image_path;
+        }
+
         $project = new Project();
 
-        $project->fill($val_data);
+        $project->fill($validated);
         $project->save();
 
         return to_route('admin.projects.index');
-
     }
 
     /**
@@ -67,7 +63,6 @@ class ProjectController extends Controller
     {
 
         return view('admin.projects.show', compact('project'));
-
     }
 
     /**
@@ -75,9 +70,8 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        
-        return view('admin.projects.edit', compact('project'));
 
+        return view('admin.projects.edit', compact('project'));
     }
 
     /**
@@ -85,11 +79,25 @@ class ProjectController extends Controller
      */
     public function update(UpdateProjectRequest $request, Project $project)
     {
-        
-        $project->update($request->all());
+
+        $validated = $request->validated();
+
+
+        if ($request->has('cover_image')) {
+
+            if ($project->cover_image) {
+
+                Storage::delete($project->cover_image);
+            }
+
+            $image_path = Storage::put('uploads', $request->cover_image);
+
+            $validated['cover_image'] = $image_path;
+        }
+
+        $project->update($validated);
 
         return to_route('admin.projects.show', $project)->with('message', 'Post updated successfully');
-
     }
 
     /**
@@ -97,9 +105,14 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
-        //dd($project);
+
+
+        if ($project->cover_image && !Str::startsWith($project->cover_image, 'https://')) {
+
+            Storage::delete($project->cover_image);
+        }
+
         $project->delete();
         return to_route('admin.projects.index', $project)->with('message', 'Post deleted successfully');
-
     }
 }

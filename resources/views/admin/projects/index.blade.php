@@ -8,18 +8,38 @@
     <thead>
         <tr>
             <th>ID</th>
+            <th>ByUser</th>
+            <th>Type</th>
             <th>Cover Image</th>
             <th>Title</th>
             <th>Languages and frameworks</th>
             <th>Objectives</th>
             <th>Slug</th>
-            <th>Actions</th>
+            <th style="width:8%">Actions</th>
         </tr>
     </thead>
     <tbody>
         @forelse ($projects as $project)
         <tr>
             <td>{{$project->id}}</td>
+            <td>
+                @forelse ($users as $user)
+                @if($user->id == $project->user_id)
+                {{$user->name}}
+                @endif
+                @empty
+                <p>No User</p>
+                @endforelse
+            </td>
+            <td>
+                @forelse ($types as $type)
+                @if($type->id == $project->type_id)
+                {{$type->name}}
+                @endif
+                @empty
+                <p>No types</p>
+                @endforelse
+            </td>
             <td>
                 @if (Str::startsWith($project->cover_image, 'https://'))
                 <img width="100px" src="{{$project->cover_image}}" alt="">

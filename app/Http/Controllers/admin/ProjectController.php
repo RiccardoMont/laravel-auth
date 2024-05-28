@@ -6,6 +6,8 @@ use App\Models\Project;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Http\Controllers\Controller;
+use App\Models\Type;
+use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -18,8 +20,10 @@ class ProjectController extends Controller
     {
 
         $projects = Project::orderByDesc('id')->get();
+        $types = Type::all();
+        $users = User::all();
 
-        return view('admin.projects.index', compact('projects'));
+        return view('admin.projects.index', compact('projects', 'types', 'users'));
     }
 
     /**
@@ -27,8 +31,9 @@ class ProjectController extends Controller
      */
     public function create()
     {
+        $types = Type::all();
 
-        return view('admin.projects.create');
+        return view('admin.projects.create', compact('types'));
     }
 
     /**
@@ -61,8 +66,10 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
+        $types = Type::all();
+        $users = User::all();
 
-        return view('admin.projects.show', compact('project'));
+        return view('admin.projects.show', compact('project', 'users', 'types'));
     }
 
     /**
@@ -70,8 +77,9 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
+        $types = Type::all();
 
-        return view('admin.projects.edit', compact('project'));
+        return view('admin.projects.edit', compact('project', 'types'));
     }
 
     /**
@@ -80,8 +88,10 @@ class ProjectController extends Controller
     public function update(UpdateProjectRequest $request, Project $project)
     {
 
+        dd($project);
         $validated = $request->validated();
 
+        
 
         if ($request->has('cover_image')) {
 

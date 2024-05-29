@@ -19,7 +19,7 @@ class ProjectController extends Controller
     public function index()
     {
 
-        $projects = Project::orderByDesc('id')->get();
+        $projects = Project::where('user_id', auth()->id())->orderByDesc('id')->get();
         $types = Type::all();
         $users = User::all();
 
@@ -77,6 +77,10 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
+        if (auth()->id() != $project->user_id) {
+            abort(403, 'You can edit your projects only.');
+        }
+
         $types = Type::all();
 
         return view('admin.projects.edit', compact('project', 'types'));
@@ -88,9 +92,12 @@ class ProjectController extends Controller
     public function update(UpdateProjectRequest $request, Project $project)
     {
 
-        dd($project);
+        if (auth()->id() != $project->user_id) {
+            abort(403, 'You can edit your projects only.');
+        }
+        
         $validated = $request->validated();
-
+        //dd($request->validated()['type_id']);
         
 
         if ($request->has('cover_image')) {
@@ -105,8 +112,9 @@ class ProjectController extends Controller
             $validated['cover_image'] = $image_path;
         }
 
+        
         $project->update($validated);
-
+        
         return to_route('admin.projects.show', $project)->with('message', 'Post updated successfully');
     }
 
@@ -116,6 +124,9 @@ class ProjectController extends Controller
     public function destroy(Project $project)
     {
 
+        if (auth()->id() != $project->user_id) {
+            abort(403, 'You can delete your projects only.');
+        }
 
         if ($project->cover_image && !Str::startsWith($project->cover_image, 'https://')) {
 

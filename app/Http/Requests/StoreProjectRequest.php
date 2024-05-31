@@ -23,9 +23,10 @@ class StoreProjectRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => ['required', Rule::unique('projects')->ignore($this->project->id)],
+            'title' => ['required', Rule::unique('projects')],
             'type_id' => 'nullable|exists:types,id',
             'user_id' => 'nullable|exists:users,id',
+            'technologies' => 'exists:technologies,id',
             'languages_and_frameworks' => 'required|max:100',
             'objectives' => 'nullable',
             'cover_images' => 'nullable|image|max:500'

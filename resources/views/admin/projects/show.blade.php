@@ -2,7 +2,7 @@
 
 @section('content')
 
-
+@include('partials.session-message')
 
 <div class="my-4 single-project">
     <div class="title">

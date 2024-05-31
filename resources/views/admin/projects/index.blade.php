@@ -4,6 +4,7 @@
 
 
 <h1 class="my-4">Project list</h1>
+@include('partials.session-message')
 <table class="table table-striped">
     <thead>
         <tr>

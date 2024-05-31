@@ -6,6 +6,7 @@ use App\Models\Project;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Http\Controllers\Controller;
+use App\Models\Technology;
 use App\Models\Type;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
@@ -22,8 +23,9 @@ class ProjectController extends Controller
         $projects = Project::where('user_id', auth()->id())->orderByDesc('id')->get();
         $types = Type::all();
         $users = User::all();
+        $technologies = Technology::all();
 
-        return view('admin.projects.index', compact('projects', 'types', 'users'));
+        return view('admin.projects.index', compact('projects', 'types', 'users', 'technologies'));
     }
 
     /**
@@ -32,8 +34,9 @@ class ProjectController extends Controller
     public function create()
     {
         $types = Type::all();
+        $technologies = Technology::all();
 
-        return view('admin.projects.create', compact('types'));
+        return view('admin.projects.create', compact('types', 'technologies'));
     }
 
     /**
@@ -53,12 +56,24 @@ class ProjectController extends Controller
             $validated['cover_image'] = $image_path;
         }
 
+        $validated['user_id'] = auth()->id();
+
+
         $project = new Project();
+
+        //dd($project->technologies);
+
+        
 
         $project->fill($validated);
         $project->save();
 
-        return to_route('admin.projects.index');
+
+        if ($request->has('technologies')) {
+            $project->technologies()->attach($validated['technologies']);
+        }
+
+        return to_route('admin.projects.index')->with('message', 'Post created successfully');;
     }
 
     /**
@@ -68,8 +83,9 @@ class ProjectController extends Controller
     {
         $types = Type::all();
         $users = User::all();
+        $technologies = Technology::all();
 
-        return view('admin.projects.show', compact('project', 'users', 'types'));
+        return view('admin.projects.show', compact('project', 'users', 'types', 'technologies'));
     }
 
     /**
@@ -82,8 +98,9 @@ class ProjectController extends Controller
         }
 
         $types = Type::all();
+        $technologies = Technology::all();
 
-        return view('admin.projects.edit', compact('project', 'types'));
+        return view('admin.projects.edit', compact('project', 'types', 'technologies'));
     }
 
     /**
@@ -92,13 +109,14 @@ class ProjectController extends Controller
     public function update(UpdateProjectRequest $request, Project $project)
     {
 
+        //dd($request->all());
+
         if (auth()->id() != $project->user_id) {
             abort(403, 'You can edit your projects only.');
         }
         
         $validated = $request->validated();
-        //dd($request->validated()['type_id']);
-        
+              
 
         if ($request->has('cover_image')) {
 
@@ -114,6 +132,10 @@ class ProjectController extends Controller
 
         
         $project->update($validated);
+
+        if ($request->has('technologies')) {
+            $project->technologies()->sync($validated['technologies']);
+        }
         
         return to_route('admin.projects.show', $project)->with('message', 'Post updated successfully');
     }
